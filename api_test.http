@@ -1,0 +1,99 @@
+## =========================================
+## AI Motivation API - REST Client Testing
+## =========================================
+
+## Global Variables
+@baseurl=http://127.0.0.1:5000
+
+## =========================================
+## AUTH ENDPOINTS
+## =========================================
+
+## 1. Register User Baru
+# @name Register
+POST {{baseurl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "userku",
+  "password": "password123"
+}
+###
+
+## 2. Login
+# @name Login
+POST {{baseurl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "motivation123"
+}
+###
+
+## Simpan token dari response Login di atas
+@token=PASTE_TOKEN_DISINI
+
+## 3. Verifikasi Token
+# @name VerifyToken
+GET {{baseurl}}/auth/verify
+Authorization: Bearer {{token}}
+###
+
+
+## =========================================
+## MOTIVATION ENDPOINTS
+## =========================================
+
+## 4. Generate Motivasi Baru
+# @name GenerateMotivation
+POST {{baseurl}}/motivations/generate
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "theme": "semangat belajar",
+  "total": 5
+}
+###
+
+## Response contoh GenerateMotivation:
+## {
+##   "message": "Berhasil generate 5 motivasi",
+##   "theme": "semangat belajar",
+##   "total": 5,
+##   "data": [
+##     "Setiap buku yang kamu buka adalah pintu menuju versi terbaik dirimu.",
+##     "Belajar mungkin terasa berat hari ini, tapi hasilnya akan kamu nikmati seumur hidup.",
+##     ...
+##   ]
+## }
+
+## 5. Ambil Semua Motivasi (dengan pagination)
+# @name GetAllMotivations
+GET {{baseurl}}/motivations?page=1&per_page=10
+Authorization: Bearer {{token}}
+###
+
+## 6. Filter Motivasi by Kategori/Tema
+# @name GetMotivationsByCategory
+GET {{baseurl}}/motivations?page=1&per_page=10&category=semangat
+Authorization: Bearer {{token}}
+###
+
+## 7. Ambil Satu Motivasi by ID
+# @name GetMotivationById
+GET {{baseurl}}/motivations/1
+Authorization: Bearer {{token}}
+###
+
+## 8. Hapus Motivasi by ID
+# @name DeleteMotivation
+DELETE {{baseurl}}/motivations/1
+Authorization: Bearer {{token}}
+###
+
+## 9. Cek Status API (tanpa auth)
+# @name HealthCheck
+GET {{baseurl}}/
+###
